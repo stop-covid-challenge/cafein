@@ -3,7 +3,6 @@ package stop.covid.challenge.cafein.domain.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import stop.covid.challenge.cafein.domain.model.Cafe;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -28,8 +27,10 @@ public class Post {
     private CorporateCafe corporateCafe;
 
     private String writing;
-    private String hashtag;
     private Integer like;
+
+    @OneToMany(mappedBy = "hashtag", cascade = CascadeType.ALL)
+    private List<HashTag> hashTags = new ArrayList<>();
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();

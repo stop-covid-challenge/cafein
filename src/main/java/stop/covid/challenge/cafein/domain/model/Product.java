@@ -24,7 +24,9 @@ public class Product {
     private String title;
     private Integer price;
     private Integer amount;
-    private String hashtag;
+
+    @OneToMany(mappedBy = "hashtag", cascade = CascadeType.ALL)
+    private List<HashTag> hashTags = new ArrayList<>();
 
     @OneToMany(mappedBy = "image", cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();
