@@ -16,13 +16,13 @@ public class Follow {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "follower_id")
-    private PersonalCafe follower;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "follower_id")
+//    private PersonalCafe follow;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "following_id")
-    private PersonalCafe following;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "following_id")
+//    private PersonalCafe following;
 
     @Enumerated(EnumType.STRING)
     private Subscription subscription;

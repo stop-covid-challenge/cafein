@@ -21,10 +21,10 @@ public class User {
     private String phoneNumber;
 
     //cafe 연관관계 OneToMany와 메소드 설정
-    @OneToMany(mappedBy = "personal_cafe", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<PersonalCafe> personalCafes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "corporate_cafe", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<CorporateCafe> corporateCafes = new ArrayList<>();
 
 }

@@ -25,13 +25,13 @@ public class Product {
     private Integer price;
     private Integer amount;
 
-    @OneToMany(mappedBy = "hashtag", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<HashTag> hashTags = new ArrayList<>();
 
-    @OneToMany(mappedBy = "image", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();
 
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
 
 }

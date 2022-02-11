@@ -25,10 +25,10 @@ public class Menu {
     private String title;
     private String writing;
 
-    @OneToMany(mappedBy = "hashtag", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
     private List<HashTag> hashTags = new ArrayList<>();
 
-    @OneToMany(mappedBy = "image", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();
 
 }

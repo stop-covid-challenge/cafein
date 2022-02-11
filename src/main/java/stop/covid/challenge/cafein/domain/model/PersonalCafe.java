@@ -21,18 +21,18 @@ public class PersonalCafe extends Cafe {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "menu_id", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "personalCafe", cascade = CascadeType.ALL)
     private List<Menu> menus = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post_id", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "personalCafe", cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "review_id", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "personalCafe", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
 
-    @OneToMany(mappedBy = "follow_id", cascade = CascadeType.ALL)
-    private List<PersonalCafe> followers = new ArrayList<>();
+//    @OneToMany(mappedBy = "follow", cascade = CascadeType.ALL)
+//    private List<PersonalCafe> followers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "follow_id", cascade = CascadeType.ALL)
-    private List<PersonalCafe> following = new ArrayList<>();
+//    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL)
+//    private List<PersonalCafe> followings = new ArrayList<>();
 }

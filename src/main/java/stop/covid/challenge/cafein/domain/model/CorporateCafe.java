@@ -21,13 +21,13 @@ public class CorporateCafe extends Cafe {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "corporateCafe")
     private List<Product> products = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "corporateCafe")
     private List<Post> posts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "corporateCafe")
     private List<Review> reviews = new ArrayList<>();
 
 }
