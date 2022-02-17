@@ -35,4 +35,10 @@ public class PersonalCafe extends Cafe {
 
 //    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL)
 //    private List<PersonalCafe> followings = new ArrayList<>();
+
+    public void addUser(User user) {
+        this.user = user;
+        user.getPersonalCafes().add(this);
+    }
+
 }

@@ -6,4 +6,7 @@ import stop.covid.challenge.cafein.domain.model.PersonalCafe;
 
 @Repository
 public interface PersonalCafeRepository extends JpaRepository<PersonalCafe, Long> {
+
+    PersonalCafe findPersonalCafeByNickname(String nickname);
+
 }
