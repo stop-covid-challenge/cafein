@@ -22,10 +22,6 @@ public class Post {
     @JoinColumn(name = "personal_cafe_id")
     private PersonalCafe personalCafe;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "corporate_cafe_id")
-    private CorporateCafe corporateCafe;
-
     private String writing;
     private Integer like;
 

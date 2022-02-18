@@ -6,4 +6,7 @@ import stop.covid.challenge.cafein.domain.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
+
+    User findUserByKakaoId(String kakaoId);
+
 }

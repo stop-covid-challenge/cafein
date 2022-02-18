@@ -24,7 +24,4 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<PersonalCafe> personalCafes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<CorporateCafe> corporateCafes = new ArrayList<>();
-
 }

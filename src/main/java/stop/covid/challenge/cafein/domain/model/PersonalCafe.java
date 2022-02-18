@@ -3,6 +3,7 @@ package stop.covid.challenge.cafein.domain.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import stop.covid.challenge.cafein.domain.type.CafeType;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -21,6 +22,9 @@ public class PersonalCafe extends Cafe {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Enumerated(EnumType.STRING)
+    private CafeType cafeType;
+
     @OneToMany(mappedBy = "personalCafe", cascade = CascadeType.ALL)
     private List<Menu> menus = new ArrayList<>();
 
@@ -35,4 +39,10 @@ public class PersonalCafe extends Cafe {
 
 //    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL)
 //    private List<PersonalCafe> followings = new ArrayList<>();
+
+    public void addUser(User user) {
+        this.user = user;
+        user.getPersonalCafes().add(this);
+    }
+
 }
