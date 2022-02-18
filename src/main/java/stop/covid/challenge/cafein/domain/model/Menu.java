@@ -31,4 +31,9 @@ public class Menu {
     @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();
 
+    public void addPersonalCafe(PersonalCafe personalCafe) {
+        this.personalCafe = personalCafe;
+        personalCafe.getMenus().add(this);
+    }
+
 }

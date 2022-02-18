@@ -3,6 +3,7 @@ package stop.covid.challenge.cafein.domain.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import stop.covid.challenge.cafein.domain.type.CafeType;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -20,6 +21,9 @@ public class PersonalCafe extends Cafe {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Enumerated(EnumType.STRING)
+    private CafeType cafeType;
 
     @OneToMany(mappedBy = "personalCafe", cascade = CascadeType.ALL)
     private List<Menu> menus = new ArrayList<>();

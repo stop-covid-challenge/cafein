@@ -19,16 +19,12 @@ public class Review {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "corporate_cafe_id")
-    private CorporateCafe corporateCafe;
+    @JoinColumn(name = "personal_cafe_id")
+    private PersonalCafe personalCafe;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "personal_cafe_id")
-    private PersonalCafe personalCafe;
 
     private String content;
     private Integer score;

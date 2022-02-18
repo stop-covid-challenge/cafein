@@ -18,8 +18,8 @@ public class Product {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "corporate_cafe_id")
-    private CorporateCafe corporateCafe;
+    @JoinColumn(name = "personal_cafe_id")
+    private PersonalCafe personalCafe;
 
     private String title;
     private Integer price;
