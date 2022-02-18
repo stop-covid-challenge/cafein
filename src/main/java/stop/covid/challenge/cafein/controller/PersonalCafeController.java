@@ -38,7 +38,7 @@ public class PersonalCafeController {
         return ResponseEntity.ok(personalCafe);
     }
 
-    // 프로필 표시 할 때
+    // 프로필 조회 할 때 (내 포스트 전체까지 볼 수 있다.)
     @GetMapping(value = "/profile")
     public ResponseEntity<PersonalCafe> getInfo(
         @RequestParam(value = "kakaoId") String kakaoId,

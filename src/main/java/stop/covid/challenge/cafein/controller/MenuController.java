@@ -1,6 +1,7 @@
 package stop.covid.challenge.cafein.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import stop.covid.challenge.cafein.domain.model.Menu;
@@ -8,6 +9,7 @@ import stop.covid.challenge.cafein.domain.model.PersonalCafe;
 import stop.covid.challenge.cafein.dto.MenuDto;
 import stop.covid.challenge.cafein.repository.MenuRepository;
 import stop.covid.challenge.cafein.repository.PersonalCafeRepository;
+import stop.covid.challenge.cafein.service.MenuService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +23,7 @@ public class MenuController {
 
     private final MenuRepository menuRepository;
     private final PersonalCafeRepository personalCafeRepository;
+    private final MenuService menuService;
 
     // 메뉴 조회
     @GetMapping(value = "/get")
@@ -34,11 +37,14 @@ public class MenuController {
 
     // 메뉴 등록
     @PostMapping(value = "/post")
-    public ResponseEntity<?> postMenu(@RequestBody MenuDto menuDto) {
+    public ResponseEntity<Long> postMenu(@RequestBody MenuDto menuDto) {
+        return new ResponseEntity<Long>(menuService.save(menuDto), HttpStatus.OK) ;
+    }
 
-
-
-        return null;
+    // 메뉴 수정
+    @PatchMapping(value = "/patch/{id}")
+    public ResponseEntity patchMenu(@PathVariable Long id, @RequestBody MenuDto menuDto) {
+        return menuService.update(id, menuDto) ? new ResponseEntity(HttpStatus.OK) : new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
     // 메뉴 삭제
