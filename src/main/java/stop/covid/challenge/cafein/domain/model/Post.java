@@ -1,8 +1,6 @@
 package stop.covid.challenge.cafein.domain.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,7 +9,9 @@ import java.util.List;
 @Entity(name = "post")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class Post {
 
     @Id @Column(name = "post_id")
@@ -33,4 +33,9 @@ public class Post {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();
+
+    public void setPersonalCafe(PersonalCafe personalCafe) {
+        this.personalCafe = personalCafe;
+        personalCafe.getPosts().add(this);
+    }
 }
