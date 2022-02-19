@@ -6,7 +6,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity(name = "post")
+@Entity
+@Table(name = "post")
 @Getter
 @Setter
 @Builder
@@ -18,12 +19,12 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String writing;
+    private int likeNumber;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "personal_cafe_id")
     private PersonalCafe personalCafe;
-
-    private String writing;
-    private Integer like;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<HashTag> hashTags = new ArrayList<>();

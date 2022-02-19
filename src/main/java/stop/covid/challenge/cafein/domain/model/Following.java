@@ -20,7 +20,7 @@ public class Following {
     @JoinColumn(name = "parent_id")
     private PersonalCafe personalCafe;
 
-    // 내가 팔로우하는 사람의 아이디
+    // 내가 팔로잉하는 사람의 아이디
     @Column(name = "follower_id")
     private Long follower_id;
 

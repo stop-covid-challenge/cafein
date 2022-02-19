@@ -46,7 +46,7 @@ public class PostService {
             return false;
 
         Post post = oPost.get();
-        if (postDto.getLike() >= 0) post.setLike(postDto.getLike());
+        if (postDto.getLikeNumber() >= 0) post.setLikeNumber(postDto.getLikeNumber());
         if (postDto.getWriting().length() > 0) post.setWriting(postDto.getWriting());
         if (postDto.getImages().toArray().length > 0) post.setImages(postDto.getImages());
         if (postDto.getHashTags().toArray().length > 0) post.setHashTags(postDto.getHashTags());
