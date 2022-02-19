@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class FollowDto {
+public class FollowListDto {
     private String profile_image;
     private String nickname;
 }
