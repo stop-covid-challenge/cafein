@@ -35,6 +35,9 @@ public class PersonalCafe extends Cafe {
     private List<Review> reviews = new ArrayList<>();
 
     @OneToMany(mappedBy = "personalCafe", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "personalCafe", cascade = CascadeType.ALL)
     private List<Follower> followers = new ArrayList<>();
 
     @OneToMany(mappedBy = "personalCafe", cascade = CascadeType.ALL)

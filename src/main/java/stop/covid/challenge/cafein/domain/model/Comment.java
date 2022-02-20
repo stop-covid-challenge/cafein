@@ -20,6 +20,10 @@ public class Comment {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "personal_cafe_id")
+    private PersonalCafe personalCafe;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Post post;
 
