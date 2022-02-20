@@ -8,9 +8,12 @@ import stop.covid.challenge.cafein.domain.model.PersonalCafe;
 import stop.covid.challenge.cafein.domain.model.Post;
 import stop.covid.challenge.cafein.dto.MenuDto;
 import stop.covid.challenge.cafein.dto.PostDto;
+import stop.covid.challenge.cafein.repository.FollowingRepository;
 import stop.covid.challenge.cafein.repository.PersonalCafeRepository;
 import stop.covid.challenge.cafein.repository.PostRepository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,6 +23,7 @@ public class PostService {
 
     private final PersonalCafeRepository personalCafeRepository;
     private final PostRepository postRepository;
+    private final FollowingRepository followingRepository;
 
     // 포스트 등록
     @Transactional
@@ -38,6 +42,7 @@ public class PostService {
         return true;
     }
 
+    // 포스트 수정
     @Transactional
     public Boolean update(Long id, PostDto postDto) {
         Optional<Post> oPost = postRepository.findById(id);
@@ -60,6 +65,16 @@ public class PostService {
     @Transactional
     public void delete(Long id) {
         postRepository.deleteById(id);
+    }
+
+    // 내가 팔로잉하고 있는 카페의 최신게시글 표시
+    public List<Post> getFollowingPosts(Long my_id) {
+        List<Long> followingIds = new ArrayList<>();
+        personalCafeRepository.findById(my_id).get().getFollowings().forEach(following -> {
+            followingIds.add(following.getFollower_id());
+        });
+
+        return postRepository.findAllById(followingIds);
     }
 
 }
