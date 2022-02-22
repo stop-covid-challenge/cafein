@@ -34,11 +34,14 @@ public class PersonalCafe extends Cafe {
     @OneToMany(mappedBy = "personalCafe", cascade = CascadeType.ALL)
     private List<Review> reviews = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "follow", cascade = CascadeType.ALL)
-//    private List<PersonalCafe> followers = new ArrayList<>();
+    @OneToMany(mappedBy = "personalCafe", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL)
-//    private List<PersonalCafe> followings = new ArrayList<>();
+    @OneToMany(mappedBy = "personalCafe", cascade = CascadeType.ALL)
+    private List<Follower> followers = new ArrayList<>();
+
+    @OneToMany(mappedBy = "personalCafe", cascade = CascadeType.ALL)
+    private List<Following> followings = new ArrayList<>();
 
     public void addUser(User user) {
         this.user = user;

@@ -15,7 +15,7 @@ import java.util.List;
 public class PostDto {
 
     private String writing;
-    private Integer like;
+    private int likeNumber;
     private List<HashTag> hashTags = new ArrayList<>();
     private List<Comment> comments = new ArrayList<>();
     private List<Image> images = new ArrayList<>();
@@ -23,7 +23,7 @@ public class PostDto {
     public Post toEntity() {
         return Post.builder()
             .writing(writing)
-            .like(like)
+            .likeNumber(likeNumber)
             .hashTags(hashTags)
             .comments(comments)
             .images(images)

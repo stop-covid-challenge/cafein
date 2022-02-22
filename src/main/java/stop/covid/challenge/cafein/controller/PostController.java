@@ -36,4 +36,10 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
 
+    // 구독한 카페의 게시물 가져오기
+    @GetMapping("/subscribe")
+    public ResponseEntity getSubscribePost(@RequestParam Long my_id) {
+        return ResponseEntity.ok(postService.getFollowingPosts(my_id));
+    }
+
 }
