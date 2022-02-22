@@ -19,8 +19,8 @@ else
   sleep 5
 fi
 
-REAL_PATH=/home/ubuntu/action/build/libs/
+REAL_PATH=/home/ubuntu/action/build/libs/cafein-0.0.1-SNAPSHOT.jar
 
-DEPLOY_JAR=$REAL_PATH$JAR_NAME
+DEPLOY_JAR=$REAL_PATH
 echo "> DEPLOY_JAR 배포"    >> /home/ubuntu/action/deploy.log
 nohup java -jar $DEPLOY_JAR >> /home/ubuntu/deploy.log 2>/home/ubuntu/action/deploy_err.log &
