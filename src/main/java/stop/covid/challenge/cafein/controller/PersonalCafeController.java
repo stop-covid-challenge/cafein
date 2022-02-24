@@ -7,6 +7,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import stop.covid.challenge.cafein.domain.model.Cafe;
 import stop.covid.challenge.cafein.domain.model.PersonalCafe;
 import stop.covid.challenge.cafein.domain.model.User;
+import stop.covid.challenge.cafein.dto.CafeDto;
 import stop.covid.challenge.cafein.repository.PersonalCafeRepository;
 import stop.covid.challenge.cafein.repository.UserRepository;
 
@@ -20,7 +21,7 @@ public class PersonalCafeController {
 
     // 프로필 등록
     @PostMapping(value = "/register")
-    public ResponseEntity<PersonalCafe> registerInfo(@RequestBody Cafe cafe) {
+    public ResponseEntity<PersonalCafe> registerInfo(@RequestBody CafeDto cafe) {
         PersonalCafe personalCafe = new PersonalCafe();
         personalCafe.setNickname(cafe.getNickname());
         personalCafe.setIntroduce(cafe.getIntroduce());
@@ -28,8 +29,8 @@ public class PersonalCafeController {
         personalCafe.setProfileImage(cafe.getProfileImage());
         personalCafe.setBackgroundImage(cafe.getBackgroundImage());
 
-        // User 생성 및 더하기
-        User user = new User();
+        // User 찾고 더하기
+        User user = userRepository.findById(cafe.getUser_id()).get();
         personalCafe.addUser(user);
 
         // PersonalCafe 생성 및 저장
