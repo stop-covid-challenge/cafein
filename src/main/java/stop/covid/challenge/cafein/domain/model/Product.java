@@ -22,8 +22,8 @@ public class Product {
     private PersonalCafe personalCafe;
 
     private String title;
-    private Integer price;
-    private Integer amount;
+    private int price;
+    private int amount;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<HashTag> hashTags = new ArrayList<>();
