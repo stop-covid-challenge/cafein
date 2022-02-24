@@ -41,12 +41,12 @@ public class PersonalCafeController {
     // 프로필 조회 할 때 (내 포스트 전체까지 볼 수 있다.)
     @GetMapping(value = "/profile")
     public ResponseEntity<PersonalCafe> getInfo(
-        @RequestParam(value = "kakaoId") String kakaoId,
+        @RequestParam(value = "socialId") String socialId,
         @RequestParam(value = "nickname") String nickname
     ) throws HttpClientErrorException.NotFound {
 
         // 카카오 아이디로 조회
-        User user = userRepository.findUserByKakaoId(kakaoId);
+        User user = userRepository.findUserBySocialId(socialId);
 
         for (PersonalCafe personalCafe : user.getPersonalCafes()) {
             if (personalCafe.getNickname() == nickname) {
