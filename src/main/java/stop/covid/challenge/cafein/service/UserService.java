@@ -10,8 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import springfox.documentation.spring.web.json.Json;
 import stop.covid.challenge.cafein.domain.auth.AuthorizationKakao;
+import stop.covid.challenge.cafein.domain.model.PersonalCafe;
 import stop.covid.challenge.cafein.domain.model.User;
 import stop.covid.challenge.cafein.dto.UserDto;
+import stop.covid.challenge.cafein.repository.PersonalCafeRepository;
 import stop.covid.challenge.cafein.repository.UserRepository;
 import stop.covid.challenge.cafein.service.auth.Oauth2Kakao;
 
@@ -21,6 +23,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final Oauth2Kakao oauth2Kakao;
+    private final PersonalCafeRepository personalCafeRepository;
 
     public ResponseEntity<User> oauth2AuthorizationKakao(String code) {
         AuthorizationKakao authorization = oauth2Kakao.callTokenApi(code);
@@ -63,17 +66,32 @@ public class UserService {
 
     public User loginRegister(UserDto userDto) {
         User user = new User();
-        if (!userDto.getNickname().isEmpty()) user.setNickname(userDto.getNickname());
+        PersonalCafe personalCafe = new PersonalCafe();
+        if (!userDto.getNickname().isEmpty()) {
+            user.setNickname(userDto.getNickname());
+            personalCafe.setIntroduce(userDto.getNickname());
+        }
         if (!userDto.getSocialId().isEmpty()) user.setSocialId(userDto.getSocialId());
-        if (!userDto.getProfileImage().isEmpty()) user.setProfileImage(userDto.getProfileImage());
+        if (!userDto.getProfileImage().isEmpty()) {
+            user.setProfileImage(userDto.getProfileImage());
+            personalCafe.setProfileImage(userDto.getProfileImage());
+        }
         if (!userDto.getEmail().isEmpty()) user.setEmail(userDto.getEmail());
+
+        if (!userDto.getIntroduce().isEmpty()) personalCafe.setIntroduce(userDto.getIntroduce());
+        if (!userDto.getAddress().isEmpty()) personalCafe.setAddress(userDto.getAddress());
+        if (!userDto.getBackgroundImage().isEmpty()) personalCafe.setBackgroundImage(userDto.getBackgroundImage());
 
         User findUser = userRepository.findUserBySocialId(user.getSocialId());
         User a = null;
         if (findUser != a) {
+            personalCafe.addUser(findUser);
+            personalCafeRepository.save(personalCafe);
             return findUser;
         } else {
+            personalCafe.addUser(user);
             userRepository.save(user);
+            personalCafeRepository.save(personalCafe);
             return user;
         }
     }
