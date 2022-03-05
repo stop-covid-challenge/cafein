@@ -1,7 +1,6 @@
 package stop.covid.challenge.cafein.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import stop.covid.challenge.cafein.domain.model.User;
@@ -14,6 +13,11 @@ import stop.covid.challenge.cafein.service.UserService;
 public class UserController {
 
     private final UserService userService;
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<User> getUserInfo(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserInfo(id));
+    }
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody UserDto userDto) {

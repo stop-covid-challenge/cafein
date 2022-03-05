@@ -25,6 +25,11 @@ public class UserService {
     private final Oauth2Kakao oauth2Kakao;
     private final PersonalCafeRepository personalCafeRepository;
 
+    public User getUserInfo(Long id) {
+        User user = userRepository.findById(id).get();
+        return user;
+    }
+
     public ResponseEntity<User> oauth2AuthorizationKakao(String code) {
         AuthorizationKakao authorization = oauth2Kakao.callTokenApi(code);
         System.out.println(authorization.getAccess_token());
