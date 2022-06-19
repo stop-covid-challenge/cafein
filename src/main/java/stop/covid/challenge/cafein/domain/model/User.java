@@ -1,5 +1,6 @@
 package stop.covid.challenge.cafein.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -24,6 +25,7 @@ public class User {
 
     //cafe 연관관계 OneToMany와 메소드 설정
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<PersonalCafe> personalCafes = new ArrayList<>();
 
     //회원 등록

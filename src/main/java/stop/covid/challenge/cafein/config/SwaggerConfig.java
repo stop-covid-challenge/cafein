@@ -9,41 +9,45 @@ import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Configuration
 @EnableWebMvc
+@EnableSwagger2
 public class SwaggerConfig {
 
     private ApiInfo swaggerInfo() {
-        return new ApiInfoBuilder().title("IoT API")
-            .description("IoT API Docs").build();
+        return new ApiInfoBuilder().title("Cafe-In API")
+            .description("Cafe-In API Docs").build();
     }
 
     @Bean
     public Docket swaggerApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-            .consumes(getConsumeContentTypes())
-            .produces(getProduceContentTypes())
-            .apiInfo(swaggerInfo()).select()
+//            .consumes(getConsumeContentTypes())
+//            .produces(getProduceContentTypes())
+            .apiInfo(swaggerInfo())
+            .select()
             .apis(RequestHandlerSelectors.basePackage("stop.covid.challenge.cafein.controller"))
             .paths(PathSelectors.any())
-            .build()
-            .useDefaultResponseMessages(false);
+            .build();
+//            .useDefaultResponseMessages(false);
     }
 
-    private Set<String> getConsumeContentTypes() {
-        Set<String> consumes = new HashSet<>();
-        consumes.add("application/json;charset=UTF-8");
-        consumes.add("application/x-www-form-urlencoded");
-        return consumes;
-    }
+//    private Set<String> getConsumeContentTypes() {
+//        Set<String> consumes = new HashSet<>();
+//        consumes.add("application/json;charset=UTF-8");
+//        consumes.add("application/x-www-form-urlencoded");
+//        return consumes;
+//    }
 
-    private Set<String> getProduceContentTypes() {
-        Set<String> produces = new HashSet<>();
-        produces.add("application/json;charset=UTF-8");
-        return produces;
-    }
+//    private Set<String> getProduceContentTypes() {
+//        Set<String> produces = new HashSet<>();
+//        produces.add("application/json;charset=UTF-8");
+//        return produces;
+//    }
 }

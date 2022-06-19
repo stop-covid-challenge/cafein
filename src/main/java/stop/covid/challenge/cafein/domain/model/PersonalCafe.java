@@ -1,5 +1,6 @@
 package stop.covid.challenge.cafein.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +20,7 @@ public class PersonalCafe extends Cafe {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonManagedReference
     @JoinColumn(name = "user_id")
     private User user;
 
