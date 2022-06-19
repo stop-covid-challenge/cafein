@@ -7,9 +7,9 @@ spring:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
 
   datasource:
-    url: jdbc:mysql://cafe.cymo4x1xzhys.ap-northeast-2.rds.amazonaws.com:3306/cafein
-    username: admin
-    password: cafe1234
+    url: jdbc:mysql://127.0.0.1:3306/cafein
+    username: root
+    password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 server:
