@@ -13,20 +13,19 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class User {
+public class User extends BaseTimeEntity {
+
     @Id @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
     private String socialId;
     private String nickname;
+    private String introduce;
     private String profileImage;
+    private String backgroundImage;
+    private String address;
     private String phoneNumber;
-
-    //cafe 연관관계 OneToMany와 메소드 설정
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonBackReference
-    private List<PersonalCafe> personalCafes = new ArrayList<>();
 
     //회원 등록
     public static User createUser(String socialId, String email, String nickname, String profileImage) {

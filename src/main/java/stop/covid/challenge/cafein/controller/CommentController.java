@@ -19,8 +19,8 @@ public class CommentController {
         return ResponseEntity.ok(commentService.getMyComments(my_id));
     }
 
-    @GetMapping("/{id}/get")
-    public ResponseEntity getPostComment(@PathVariable Long post_id, @RequestParam Long my_id) {
+    @GetMapping("/{post-id}/get")
+    public ResponseEntity getPostComment(@PathVariable("post-id") Long post_id, @RequestParam Long my_id) {
         return ResponseEntity.ok(commentService.getMyCommentInPost(my_id, post_id));
     }
 

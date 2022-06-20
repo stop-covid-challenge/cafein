@@ -1,8 +1,6 @@
 package stop.covid.challenge.cafein.domain.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,27 +9,21 @@ import java.util.List;
 @Entity(name = "product")
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
-public class Product {
+@Builder
+public class Product extends BaseTimeEntity {
     @Id @Column(name = "product_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "personal_cafe_id")
-    private PersonalCafe personalCafe;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private String title;
+    private String productImage;
     private int price;
     private int amount;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<HashTag> hashTags = new ArrayList<>();
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<Image> images = new ArrayList<>();
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<Review> reviews = new ArrayList<>();
 
 }

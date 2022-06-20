@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Post {
+public class Post extends BaseTimeEntity {
 
     @Id @Column(name = "post_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,20 +23,19 @@ public class Post {
     private int likeNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "personal_cafe_id")
-    private PersonalCafe personalCafe;
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<HashTag> hashTags = new ArrayList<>();
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<Comment> comments = new ArrayList<>();
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();
 
-    public void setPersonalCafe(PersonalCafe personalCafe) {
-        this.personalCafe = personalCafe;
-        personalCafe.getPosts().add(this);
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+
+    public void addComment(Comment comment) { this.comments.add(comment); }
+    public void addPostImage(List<Image> imageList) { this.images = imageList; }
+    public void setUser(User user) {
+        this.user = user;
     }
+
 }

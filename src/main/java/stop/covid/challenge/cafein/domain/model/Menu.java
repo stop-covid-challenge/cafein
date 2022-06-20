@@ -12,28 +12,22 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Menu {
+public class Menu extends BaseTimeEntity {
 
     @Id @Column(name = "menu_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "personal_cafe_id")
-    private PersonalCafe personalCafe;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private String title;
     private String writing;
 
     @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
-    private List<HashTag> hashTags = new ArrayList<>();
-
-    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();
 
-    public void addPersonalCafe(PersonalCafe personalCafe) {
-        this.personalCafe = personalCafe;
-        personalCafe.getMenus().add(this);
-    }
+    public void addMenuImage(List<Image> imageList) { this.images = imageList; }
 
 }

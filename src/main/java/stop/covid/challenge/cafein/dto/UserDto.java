@@ -10,7 +10,5 @@ public class UserDto {
     private String nickname;
     private String email;
     private String introduce;
-    private String profileImage;
-    private String backgroundImage;
     private String address;
 }

@@ -10,6 +10,7 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Long> {
 
     User findUserBySocialId(String socialId);
+    User findUserByNickname(String nickname);
     List<User> findAllByNickname(String nickname);
 
 }
