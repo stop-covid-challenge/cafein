@@ -15,6 +15,7 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String imageName;
     private String imageLink;
 
     @ManyToOne(fetch = FetchType.LAZY)

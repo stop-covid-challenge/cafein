@@ -11,6 +11,22 @@ spring:
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 server:
   port: 8080
+cloud:
+  aws:
+    credentials:
+      access-key: AKIA2OKKC62YNPFZUNZN
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: cafein
+    stack:
+      auto: false
+
