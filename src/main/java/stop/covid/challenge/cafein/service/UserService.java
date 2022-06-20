@@ -9,9 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import stop.covid.challenge.cafein.domain.auth.AuthorizationKakao;
+import stop.covid.challenge.cafein.domain.model.Image;
 import stop.covid.challenge.cafein.domain.model.User;
 import stop.covid.challenge.cafein.dto.UserDto;
+import stop.covid.challenge.cafein.repository.ImageRepository;
 import stop.covid.challenge.cafein.repository.UserRepository;
 import stop.covid.challenge.cafein.service.auth.Oauth2Kakao;
 
@@ -22,35 +25,73 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final Oauth2Kakao oauth2Kakao;
+    private final ImageService imageService;
+    private final ImageRepository imageRepository;
 
     public User getUserInfo(Long id) {
         User user = userRepository.findById(id).get();
         return user;
     }
 
+    // 로그인 하기
+    public ResponseEntity loginUser(UserDto userDto) {
+        try {
+            User user = userRepository.findUserBySocialId(userDto.getSocialId());
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // 회원가입
     @Transactional
-    public User loginRegister(UserDto userDto) {
+    public User signup(UserDto userDto) {
         User user = new User();
         if (!userDto.getNickname().isEmpty()) {
             user.setNickname(userDto.getNickname());
         }
         if (!userDto.getSocialId().isEmpty()) user.setSocialId(userDto.getSocialId());
-        if (!userDto.getProfileImage().isEmpty()) {
-            user.setProfileImage(userDto.getProfileImage());
-        }
         if (!userDto.getEmail().isEmpty()) user.setEmail(userDto.getEmail());
 
         if (!userDto.getIntroduce().isEmpty()) user.setIntroduce(userDto.getIntroduce());
         if (!userDto.getAddress().isEmpty()) user.setAddress(userDto.getAddress());
-        if (!userDto.getBackgroundImage().isEmpty()) user.setBackgroundImage(userDto.getBackgroundImage());
 
-        User findUser = userRepository.findUserBySocialId(user.getSocialId());
-        User a = null;
-        if (findUser != a) {
-            return findUser;
-        } else {
-            return userRepository.save(user);
-        }
+        return userRepository.save(user);
+    }
+
+    // 프로필 변경
+    @Transactional
+    public User updateProfileImage(String nickname, MultipartFile multipartFile) {
+        // 사용자 조회 후 기존 사진 삭제
+        User user = userRepository.findUserByNickname(nickname);
+        Image deleteFile = imageRepository.findByImageLink(user.getProfileImage());
+        imageService.deleteFile(deleteFile);
+        imageRepository.delete(deleteFile);
+
+        // 새로운 이미지 저장 후 업데이트
+        Image profile = imageService.uploadOneFile(multipartFile);
+        profile.setUser(user);
+        imageRepository.save(profile);
+        user.setProfileImage(profile.getImageLink());
+        return userRepository.save(user);
+    }
+
+    // 배경 변경
+    @Transactional
+    public User updateBackgroundImage(String nickname, MultipartFile multipartFile) {
+        // 사용자 조회 후 기존 사진 삭제
+        User user = userRepository.findUserByNickname(nickname);
+        Image deleteFile = imageRepository.findByImageLink(user.getBackgroundImage());
+        imageService.deleteFile(deleteFile);
+        imageRepository.delete(deleteFile);
+
+        // 새로운 이미지 저장 후 업데이트
+        Image background = imageService.uploadOneFile(multipartFile);
+        background.setUser(user);
+        imageRepository.save(background);
+        user.setBackgroundImage(background.getImageLink());
+        return userRepository.save(user);
     }
 
     // 웹에서 카카오 로그인을 구현할 경우

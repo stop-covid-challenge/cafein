@@ -30,6 +30,23 @@ public class ImageService {
     private final AmazonS3 amazonS3;
     private final ImageRepository imageRepository;
 
+    public Image uploadOneFile(MultipartFile multipartFile) {
+        String fileName = createFileName(multipartFile.getOriginalFilename());
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(multipartFile.getSize());
+        objectMetadata.setContentType(multipartFile.getContentType());
+
+        try (InputStream inputStream = multipartFile.getInputStream()) {
+            amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
+                .withCannedAcl(CannedAccessControlList.PublicRead));
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
+        }
+        Image image = new Image();
+        image.setImageLink("https://cafein.s3.ap-northeast-2.amazonaws.com/" + fileName);
+        return image;
+    }
+
     public List<Image> uploadFile(List<MultipartFile> multipartFiles) {
         // s3 버킷에 먼저 이미지 저장
         List<String> fileLinkList = new ArrayList<>();
