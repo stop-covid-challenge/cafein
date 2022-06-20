@@ -12,5 +12,6 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     Comment findCommentByPersonalCafeAndPost(PersonalCafe personalCafe, Post post);
+    List<Comment> findAllByPersonalCafe(PersonalCafe personalCafe);
 
 }

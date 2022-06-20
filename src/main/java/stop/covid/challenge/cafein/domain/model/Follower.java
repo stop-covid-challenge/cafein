@@ -26,7 +26,6 @@ public class Follower {
 
     public void addFollower(PersonalCafe personalCafe) {
         this.personalCafe = personalCafe;
-        personalCafe.getFollowers().add(this);
     }
 
 }

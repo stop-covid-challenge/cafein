@@ -25,15 +25,8 @@ public class Menu {
     private String title;
     private String writing;
 
-    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
-    private List<HashTag> hashTags = new ArrayList<>();
-
-    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
-    private List<Image> images = new ArrayList<>();
-
     public void addPersonalCafe(PersonalCafe personalCafe) {
         this.personalCafe = personalCafe;
-        personalCafe.getMenus().add(this);
     }
 
 }

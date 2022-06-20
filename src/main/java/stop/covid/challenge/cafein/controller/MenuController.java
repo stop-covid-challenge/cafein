@@ -29,7 +29,7 @@ public class MenuController {
     @GetMapping(value = "/get")
     public ResponseEntity<Map<String, Object>> getMenu(@RequestParam String nickname) {
         PersonalCafe personalCafe = personalCafeRepository.findPersonalCafeByNickname(nickname);
-        List<Menu> menus = personalCafe.getMenus();
+        List<Menu> menus = menuRepository.findAllByPersonalCafe(personalCafe);
         Map<String, Object> result = new HashMap<>();
         result.put("data", menus);
         return ResponseEntity.ok(result);

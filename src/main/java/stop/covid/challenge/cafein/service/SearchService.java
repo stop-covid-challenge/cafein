@@ -6,10 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import stop.covid.challenge.cafein.domain.model.*;
 import stop.covid.challenge.cafein.dto.*;
-import stop.covid.challenge.cafein.repository.MenuRepository;
-import stop.covid.challenge.cafein.repository.PostRepository;
-import stop.covid.challenge.cafein.repository.ProductRepository;
-import stop.covid.challenge.cafein.repository.UserRepository;
+import stop.covid.challenge.cafein.repository.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +23,7 @@ public class SearchService {
     private final MenuRepository menuRepository;
     private final PostRepository postRepository;
     private final ProductRepository productRepository;
+    private final ImageRepository imageRepository;
 
     public ResponseEntity getSearchResult(String searchKeyword) {
         if (searchKeyword.contains("#")) {
@@ -72,8 +70,9 @@ public class SearchService {
 
     private SearchMenuDto changeHashTagIntoMenu(Long id) {
         Menu menu = menuRepository.findById(id).get();
+        List<Image> images = imageRepository.findAllByMenu(menu);
         SearchMenuDto searchMenuDto = new SearchMenuDto();
-        searchMenuDto.setImages(menu.getImages());
+        searchMenuDto.setImages(images);
         searchMenuDto.setWriting(menu.getWriting());
         searchMenuDto.setTitle(menu.getTitle());
         return searchMenuDto;
@@ -81,8 +80,9 @@ public class SearchService {
 
     private SearchPostDto changeHashTagIntoPost(Long id) {
         Post post = postRepository.findById(id).get();
+        List<Image> images = imageRepository.findAllByPost(post);
         SearchPostDto searchPostDto = new SearchPostDto();
-        searchPostDto.setImages(post.getImages());
+        searchPostDto.setImages(images);
         searchPostDto.setWriting(post.getWriting());
         searchPostDto.setLikeNumber(post.getLikeNumber());
         return searchPostDto;
@@ -90,8 +90,9 @@ public class SearchService {
 
     private SearchProductDto changeHashTagIntoProduct(Long id) {
         Product product = productRepository.findById(id).get();
+        List<Image> images = imageRepository.findAllByProduct(product);
         SearchProductDto searchProductDto = new SearchProductDto();
-        searchProductDto.setImages(product.getImages());
+        searchProductDto.setImages(images);
         searchProductDto.setTitle(product.getTitle());
         searchProductDto.setPrice(product.getPrice());
         return searchProductDto;

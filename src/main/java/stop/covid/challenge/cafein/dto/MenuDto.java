@@ -18,13 +18,4 @@ public class MenuDto {
     private List<HashTag> hashTags = new ArrayList<>();
     private List<Image> images = new ArrayList<>();
 
-    public Menu toEntity() {
-        return Menu.builder()
-            .title(title)
-            .writing(writing)
-            .hashTags(hashTags)
-            .images(images)
-            .build();
-    }
-
 }

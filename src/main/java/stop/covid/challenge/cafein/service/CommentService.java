@@ -24,7 +24,8 @@ public class CommentService {
 
     // 내가 쓴 댓글 가져오기
     public List<Comment> getMyComments(Long my_id) {
-        List<Comment> comments = personalCafeRepository.findById(my_id).get().getComments();
+        PersonalCafe personalCafe = personalCafeRepository.findById(my_id).get();
+        List<Comment> comments = commentRepository.findAllByPersonalCafe(personalCafe);
         return comments;
     }
 

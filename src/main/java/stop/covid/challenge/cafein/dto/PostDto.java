@@ -20,13 +20,4 @@ public class PostDto {
     private List<Comment> comments = new ArrayList<>();
     private List<Image> images = new ArrayList<>();
 
-    public Post toEntity() {
-        return Post.builder()
-            .writing(writing)
-            .likeNumber(likeNumber)
-            .hashTags(hashTags)
-            .comments(comments)
-            .images(images)
-            .build();
-    }
 }

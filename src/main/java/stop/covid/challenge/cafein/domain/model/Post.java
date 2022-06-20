@@ -26,17 +26,7 @@ public class Post {
     @JoinColumn(name = "personal_cafe_id")
     private PersonalCafe personalCafe;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<HashTag> hashTags = new ArrayList<>();
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<Comment> comments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    private List<Image> images = new ArrayList<>();
-
     public void setPersonalCafe(PersonalCafe personalCafe) {
         this.personalCafe = personalCafe;
-        personalCafe.getPosts().add(this);
     }
 }

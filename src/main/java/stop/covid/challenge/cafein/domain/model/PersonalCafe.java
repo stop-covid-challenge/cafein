@@ -20,34 +20,14 @@ public class PersonalCafe extends Cafe {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonManagedReference
     @JoinColumn(name = "user_id")
     private User user;
 
     @Enumerated(EnumType.STRING)
     private CafeType cafeType;
 
-    @OneToMany(mappedBy = "personalCafe", cascade = CascadeType.ALL)
-    private List<Menu> menus = new ArrayList<>();
-
-    @OneToMany(mappedBy = "personalCafe", cascade = CascadeType.ALL)
-    private List<Post> posts = new ArrayList<>();
-
-    @OneToMany(mappedBy = "personalCafe", cascade = CascadeType.ALL)
-    private List<Review> reviews = new ArrayList<>();
-
-    @OneToMany(mappedBy = "personalCafe", cascade = CascadeType.ALL)
-    private List<Comment> comments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "personalCafe", cascade = CascadeType.ALL)
-    private List<Follower> followers = new ArrayList<>();
-
-    @OneToMany(mappedBy = "personalCafe", cascade = CascadeType.ALL)
-    private List<Following> followings = new ArrayList<>();
-
     public void addUser(User user) {
         this.user = user;
-        user.getPersonalCafes().add(this);
     }
 
 }

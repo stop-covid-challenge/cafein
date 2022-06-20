@@ -11,6 +11,8 @@ import stop.covid.challenge.cafein.dto.CafeDto;
 import stop.covid.challenge.cafein.repository.PersonalCafeRepository;
 import stop.covid.challenge.cafein.repository.UserRepository;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/personal")
 @RequiredArgsConstructor
@@ -48,8 +50,9 @@ public class PersonalCafeController {
 
         // 카카오 아이디로 조회
         User user = userRepository.findUserBySocialId(socialId);
+        List<PersonalCafe> personalCafes = personalCafeRepository.findAllByUser(user);
 
-        for (PersonalCafe personalCafe : user.getPersonalCafes()) {
+        for (PersonalCafe personalCafe : personalCafes) {
             if (personalCafe.getNickname() == nickname) {
                 return ResponseEntity.ok(personalCafe);
             }

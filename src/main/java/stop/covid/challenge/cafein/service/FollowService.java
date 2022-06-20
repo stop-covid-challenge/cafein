@@ -26,7 +26,8 @@ public class FollowService {
     // 사용자의 Follower 가져오기
     public List<FollowListDto> getFollower(Long id) {
         // 사용자의 Follower를 가져오기
-        List<Follower> followers = personalCafeRepository.findById(id).orElseThrow().getFollowers();
+        PersonalCafe host = personalCafeRepository.findById(id).get();
+        List<Follower> followers = followerRepository.findAllByPersonalCafe(host);
         List<FollowListDto> followDtos = new ArrayList<>();
 
         // 각 Follow를 조회하여 프로필 이미지와 닉네임 가져오기
@@ -43,7 +44,8 @@ public class FollowService {
     // 사용자의 Following 가져오기
     public List<FollowListDto> getFollowing(Long id) {
         // 사용자의 Following 가져오기
-        List<Following> followings = personalCafeRepository.findById(id).orElseThrow().getFollowings();
+        PersonalCafe host = personalCafeRepository.findById(id).get();
+        List<Following> followings = followingRepository.findAllByPersonalCafe(host);
         List<FollowListDto> followDtos = new ArrayList<>();
 
         // 각 Follow를 조회하여 프로필 이미지와 닉네임 가져오기
@@ -66,7 +68,7 @@ public class FollowService {
         PersonalCafe otherPersonalCafe = personalCafeRepository.findById(other_id).get();
 
         // 내 팔로잉 목록
-        List<Following> followings = personalCafe.getFollowings();
+        List<Following> followings = followingRepository.findAllByPersonalCafe(personalCafe);
         boolean isExist = false;
 
         // 내 Following
@@ -89,9 +91,10 @@ public class FollowService {
             followingRepository.delete(myFollowing);
 
             // 상대방 팔로워 목록에서도 삭제하기
-            for (Follower follower : otherPersonalCafe.getFollowers()) {
-                if (follower.getFollowing_id() == my_id) {
-                    otherFollower = follower;
+            List<Follower> followers = followerRepository.findAllByPersonalCafe(otherPersonalCafe);
+            for (Follower compare : followers) {
+                if (compare.getFollowing_id() == personalCafe.getId()) {
+                    otherFollower = compare;
                     break;
                 }
             }
