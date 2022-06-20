@@ -3,6 +3,7 @@ package stop.covid.challenge.cafein.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import stop.covid.challenge.cafein.domain.model.Menu;
@@ -36,7 +37,7 @@ public class MenuController {
     }
 
     // 메뉴 하나 조회
-    @GetMapping(value = "/get/{id}")
+    @GetMapping(value = "/get/{menu-id}")
     public ResponseEntity<Map<String, Object>> getOneMenu(@PathVariable Long id) {
         Menu menu = menuService.getMenu(id);
         Map<String, Object> result = new HashMap<>();
@@ -48,25 +49,30 @@ public class MenuController {
     @PostMapping(value = "/post", consumes = { "multipart/form-data" })
     public ResponseEntity<Long> postMenu(
         @RequestPart("images") List<MultipartFile> images,
-        @RequestPart("json") MenuDto menuDto
+        @RequestParam("title") String title,
+        @RequestParam("writing") String writing,
+        @RequestParam("nickname") String nickname
     ) {
-        return new ResponseEntity<Long>(menuService.save(images, menuDto), HttpStatus.OK) ;
+        MenuDto menuDto = new MenuDto(title, writing);
+        return new ResponseEntity<Long>(menuService.save(nickname, images, menuDto), HttpStatus.OK) ;
     }
 
     // 메뉴 수정
-    @PatchMapping(value = "/patch/{id}", consumes = { "multipart/form-data" })
+    @PatchMapping(value = "/patch/{menu-id}", consumes = { "multipart/form-data" })
     public ResponseEntity patchMenu(
-        @PathVariable Long id,
+        @PathVariable(name = "menu-id") Long id,
         @RequestPart("images") List<MultipartFile> images,
-        @RequestPart("json") MenuDto menuDto
+        @RequestParam("title") String title,
+        @RequestParam("writing") String writing
     ) {
+        MenuDto menuDto = new MenuDto(title, writing);
         return menuService.update(id, images, menuDto) ? new ResponseEntity(HttpStatus.OK) : new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
     // 메뉴 삭제
-    @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<?> deleteMenu(@PathVariable Long id) {
-        menuService.delete(id);
+    @DeleteMapping(value = "/delete/{menu-id}")
+    public ResponseEntity<?> deleteMenu(@PathVariable(name = "menu-id") Long menu_id) {
+        menuService.delete(menu_id);
         return ResponseEntity.noContent().build();
     }
 

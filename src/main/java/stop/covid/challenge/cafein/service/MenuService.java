@@ -4,14 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import stop.covid.challenge.cafein.domain.model.HashTag;
-import stop.covid.challenge.cafein.domain.model.Image;
-import stop.covid.challenge.cafein.domain.model.Menu;
-import stop.covid.challenge.cafein.domain.model.PersonalCafe;
+import stop.covid.challenge.cafein.domain.model.*;
 import stop.covid.challenge.cafein.dto.MenuDto;
-import stop.covid.challenge.cafein.repository.HashTagRepository;
-import stop.covid.challenge.cafein.repository.ImageRepository;
-import stop.covid.challenge.cafein.repository.MenuRepository;
+import stop.covid.challenge.cafein.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +19,7 @@ public class MenuService {
 
     private final MenuRepository menuRepository;
     private final ImageRepository imageRepository;
-    private final HashTagRepository hashTagRepository;
+    private final PersonalCafeRepository personalCafeRepository;
     private final ImageService imageService;
 
     @Transactional
@@ -38,8 +33,10 @@ public class MenuService {
     }
 
     @Transactional
-    public Long save(List<MultipartFile> files, MenuDto menuDto) {
-        Menu menu = menuRepository.save(Menu.builder()
+    public Long save(String nickname, List<MultipartFile> files, MenuDto menuDto) {
+        PersonalCafe personalCafe = personalCafeRepository.findPersonalCafeByNickname(nickname);
+        Menu menu = menuRepository.save(
+            Menu.builder().personalCafe(personalCafe)
             .title(menuDto.getTitle())
             .writing(menuDto.getWriting())
             .build());
@@ -83,14 +80,14 @@ public class MenuService {
             menu.addMenuImage(imageList);
             menuRepository.save(menu);
         }
-        if (menuDto.getHashTags().toArray().length > 0) {
-            List<HashTag> hashTags = new ArrayList<>();
-            for (HashTag hashTag : menuDto.getHashTags()) {
-                hashTag.setMenu(menu);
-                hashTags.add(hashTag);
-            }
-            hashTagRepository.saveAll(hashTags);
-        }
+//        if (menuDto.getHashTags().toArray().length > 0) {
+//            List<HashTag> hashTags = new ArrayList<>();
+//            for (HashTag hashTag : menuDto.getHashTags()) {
+//                hashTag.setMenu(menu);
+//                hashTags.add(hashTag);
+//            }
+//            hashTagRepository.saveAll(hashTags);
+//        }
     }
 
 }
