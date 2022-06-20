@@ -11,7 +11,6 @@ import java.util.List;
 
 @Repository
 public interface ImageRepository extends JpaRepository<Image, Long> {
-    Image findByImageName(String imageName);
     List<Image> findAllByMenu(Menu menu);
     List<Image> findAllByPost(Post post);
     List<Image> findAllByProduct(Product product);

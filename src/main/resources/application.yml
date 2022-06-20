@@ -15,18 +15,20 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+  profiles:
+    include:
+      - credential
 
 server:
   port: 8080
+
 cloud:
   aws:
     credentials:
-      access-key: AKIA2OKKC62YNPFZUNZN
-      secret-key: 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
+      instance-profile: true
     region:
       static: ap-northeast-2
     s3:
       bucket: cafein
     stack:
       auto: false
-

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import stop.covid.challenge.cafein.domain.model.Menu;
 import stop.covid.challenge.cafein.domain.model.PersonalCafe;
 import stop.covid.challenge.cafein.dto.MenuDto;
@@ -21,36 +22,51 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MenuController {
 
-    private final MenuRepository menuRepository;
     private final PersonalCafeRepository personalCafeRepository;
     private final MenuService menuService;
 
-    // 메뉴 조회
+    // 메뉴 전체 조회
     @GetMapping(value = "/get")
-    public ResponseEntity<Map<String, Object>> getMenu(@RequestParam String nickname) {
+    public ResponseEntity<Map<String, Object>> getAllMenu(@RequestParam String nickname) {
         PersonalCafe personalCafe = personalCafeRepository.findPersonalCafeByNickname(nickname);
-        List<Menu> menus = menuRepository.findAllByPersonalCafe(personalCafe);
+        List<Menu> menus = menuService.getAllMenu(personalCafe);
         Map<String, Object> result = new HashMap<>();
         result.put("data", menus);
         return ResponseEntity.ok(result);
     }
 
+    // 메뉴 하나 조회
+    @GetMapping(value = "/get/{id}")
+    public ResponseEntity<Map<String, Object>> getOneMenu(@PathVariable Long id) {
+        Menu menu = menuService.getMenu(id);
+        Map<String, Object> result = new HashMap<>();
+        result.put("menu", menu);
+        return ResponseEntity.ok(result);
+    }
+
     // 메뉴 등록
-    @PostMapping(value = "/post")
-    public ResponseEntity<Long> postMenu(@RequestBody MenuDto menuDto) {
-        return new ResponseEntity<Long>(menuService.save(menuDto), HttpStatus.OK) ;
+    @PostMapping(value = "/post", consumes = { "multipart/form-data" })
+    public ResponseEntity<Long> postMenu(
+        @RequestPart("images") List<MultipartFile> images,
+        @RequestPart("json") MenuDto menuDto
+    ) {
+        return new ResponseEntity<Long>(menuService.save(images, menuDto), HttpStatus.OK) ;
     }
 
     // 메뉴 수정
-    @PatchMapping(value = "/patch/{id}")
-    public ResponseEntity patchMenu(@PathVariable Long id, @RequestBody MenuDto menuDto) {
-        return menuService.update(id, menuDto) ? new ResponseEntity(HttpStatus.OK) : new ResponseEntity(HttpStatus.NOT_FOUND);
+    @PatchMapping(value = "/patch/{id}", consumes = { "multipart/form-data" })
+    public ResponseEntity patchMenu(
+        @PathVariable Long id,
+        @RequestPart("images") List<MultipartFile> images,
+        @RequestPart("json") MenuDto menuDto
+    ) {
+        return menuService.update(id, images, menuDto) ? new ResponseEntity(HttpStatus.OK) : new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
     // 메뉴 삭제
     @DeleteMapping(value = "/delete/{id}")
     public ResponseEntity<?> deleteMenu(@PathVariable Long id) {
-        menuRepository.deleteById(id);
+        menuService.delete(id);
         return ResponseEntity.noContent().build();
     }
 

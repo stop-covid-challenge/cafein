@@ -30,9 +30,9 @@ public class ImageService {
     private final AmazonS3 amazonS3;
     private final ImageRepository imageRepository;
 
-    public List<String> uploadFile(List<MultipartFile> multipartFiles) {
+    public List<Image> uploadFile(List<MultipartFile> multipartFiles) {
         // s3 버킷에 먼저 이미지 저장
-        List<String> fileNameList = new ArrayList<>();
+        List<String> fileLinkList = new ArrayList<>();
         multipartFiles.forEach(file -> {
             String fileName = createFileName(file.getOriginalFilename());
             ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -46,19 +46,23 @@ public class ImageService {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
             }
 
-            fileNameList.add("https://cafein.s3.ap-northeast-2.amazonaws.com/" + fileName);
+            fileLinkList.add("https://cafein.s3.ap-northeast-2.amazonaws.com/" + fileName);
         });
 
-        return fileNameList;
+        // image 객체 생성
+        List<Image> images = new ArrayList<>();
+        fileLinkList.forEach(link -> {
+            Image image = new Image();
+            image.setImageLink(link);
+            images.add(image);
+        });
+
+        return images;
     }
 
-    public void deleteFile(String fileName) {
+    public void deleteFile(Image image) {
         // s3 버킷에서 제거
-        amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
-
-        // 그 다음 이미지 Repository에서도 제거
-        Image image = imageRepository.findByImageName(fileName);
-        imageRepository.delete(image);
+        amazonS3.deleteObject(new DeleteObjectRequest(bucket, image.getImageLink().replace("https://cafein.s3.ap-northeast-2.amazonaws.com/", "")));
     }
 
     private String createFileName(String fileName) {

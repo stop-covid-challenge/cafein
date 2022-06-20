@@ -3,10 +3,11 @@ package stop.covid.challenge.cafein.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 import stop.covid.challenge.cafein.domain.model.HashTag;
 import stop.covid.challenge.cafein.domain.model.Image;
 import stop.covid.challenge.cafein.domain.model.Menu;
+import stop.covid.challenge.cafein.domain.model.PersonalCafe;
 import stop.covid.challenge.cafein.dto.MenuDto;
 import stop.covid.challenge.cafein.repository.HashTagRepository;
 import stop.covid.challenge.cafein.repository.ImageRepository;
@@ -24,20 +25,31 @@ public class MenuService {
     private final MenuRepository menuRepository;
     private final ImageRepository imageRepository;
     private final HashTagRepository hashTagRepository;
+    private final ImageService imageService;
 
     @Transactional
-    public Long save(MenuDto menuDto) {
+    public Menu getMenu(Long id) {
+        return menuRepository.findById(id).get();
+    }
+
+    @Transactional
+    public List<Menu> getAllMenu(PersonalCafe personalCafe) {
+        return menuRepository.findAllByPersonalCafe(personalCafe);
+    }
+
+    @Transactional
+    public Long save(List<MultipartFile> files, MenuDto menuDto) {
         Menu menu = menuRepository.save(Menu.builder()
             .title(menuDto.getTitle())
             .writing(menuDto.getWriting())
             .build());
 
-        checkImageAndHashTag(menuDto, menu);
+        checkImageAndHashTag(files, menuDto, menu);
         return menu.getId();
     }
 
     @Transactional
-    public Boolean update(Long id, MenuDto menuDto) {
+    public Boolean update(Long id, List<MultipartFile> files, MenuDto menuDto) {
         Optional<Menu> oMenu = menuRepository.findById(id);
 
         if (oMenu.isEmpty())
@@ -46,20 +58,30 @@ public class MenuService {
         Menu menu = oMenu.get();
         if (menuDto.getTitle().length() > 0) menu.setTitle(menuDto.getTitle());
         if (menuDto.getWriting().length() > 0) menu.setWriting(menu.getWriting());
-        checkImageAndHashTag(menuDto, menu);
-
-        menuRepository.save(menu);
+        Menu savedMenu = menuRepository.save(menu);
+        checkImageAndHashTag(files, menuDto, savedMenu);
         return true;
     }
 
-    private void checkImageAndHashTag(MenuDto menuDto, Menu menu) {
-        if (menuDto.getImages().toArray().length > 0) {
-            List<Image> images = new ArrayList<>();
-            for (Image image : menuDto.getImages()) {
+    @Transactional
+    public void delete(Long id) {
+        Menu menu = menuRepository.findById(id).get();
+        List<Image> images = menu.getImages();
+        for (Image image : images) {
+            imageService.deleteFile(image);
+        }
+        menuRepository.delete(menu);
+    }
+
+    private void checkImageAndHashTag(List<MultipartFile> files, MenuDto menuDto, Menu menu) {
+        if (files.toArray().length > 0) {
+            List<Image> images = imageService.uploadFile(files);
+            for (Image image : images) {
                 image.setMenu(menu);
-                images.add(image);
             }
-            imageRepository.saveAll(images);
+            List<Image> imageList = imageRepository.saveAll(images);
+            menu.addMenuImage(imageList);
+            menuRepository.save(menu);
         }
         if (menuDto.getHashTags().toArray().length > 0) {
             List<HashTag> hashTags = new ArrayList<>();
