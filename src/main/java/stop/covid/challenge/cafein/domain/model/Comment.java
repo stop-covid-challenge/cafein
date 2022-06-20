@@ -28,12 +28,5 @@ public class Comment extends BaseTimeEntity {
     private Post post;
 
     private String writing;
-    private Boolean modified;
-
-    @CreatedDate
-    private LocalDateTime createdDate;
-
-    @LastModifiedDate
-    private LocalDateTime updatedDate;
 
 }
