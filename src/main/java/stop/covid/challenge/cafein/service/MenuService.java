@@ -21,12 +21,10 @@ public class MenuService {
     private final ImageRepository imageRepository;
     private final ImageService imageService;
 
-    @Transactional
     public Menu getMenu(Long id) {
         return menuRepository.findById(id).get();
     }
 
-    @Transactional
     public List<Menu> getAllMenu(User user) {
         return menuRepository.findAllByUser(user);
     }

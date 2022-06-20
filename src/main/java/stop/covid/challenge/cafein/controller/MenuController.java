@@ -1,5 +1,6 @@
 package stop.covid.challenge.cafein.controller;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class MenuController {
     private final UserRepository userRepository;
     private final MenuService menuService;
 
-    // 메뉴 전체 조회
+    @ApiOperation(value = "메뉴 전체 조회", notes = "메뉴 전체 조회")
     @GetMapping(value = "/get")
     public ResponseEntity<Map<String, Object>> getAllMenu(@RequestParam String nickname) {
         User user = userRepository.findUserByNickname(nickname);
@@ -33,7 +34,7 @@ public class MenuController {
         return ResponseEntity.ok(result);
     }
 
-    // 메뉴 하나 조회
+    @ApiOperation(value = "메뉴 하나 조회", notes = "메뉴 하나 조회")
     @GetMapping(value = "/get/{menu-id}")
     public ResponseEntity<Map<String, Object>> getOneMenu(@PathVariable Long id) {
         Menu menu = menuService.getMenu(id);
@@ -42,7 +43,7 @@ public class MenuController {
         return ResponseEntity.ok(result);
     }
 
-    // 메뉴 등록
+    @ApiOperation(value = "메뉴 등록", notes = "메뉴 등록")
     @PostMapping(value = "/post", consumes = { "multipart/form-data" })
     public ResponseEntity<Long> postMenu(
         @RequestPart("images") List<MultipartFile> images,
@@ -54,7 +55,7 @@ public class MenuController {
         return new ResponseEntity<Long>(menuService.save(nickname, images, menuDto), HttpStatus.OK) ;
     }
 
-    // 메뉴 수정
+    @ApiOperation(value = "메뉴 수정", notes = "메뉴 수정")
     @PatchMapping(value = "/patch/{menu-id}", consumes = { "multipart/form-data" })
     public ResponseEntity patchMenu(
         @PathVariable(name = "menu-id") Long id,
@@ -66,7 +67,7 @@ public class MenuController {
         return menuService.update(id, images, menuDto) ? new ResponseEntity(HttpStatus.OK) : new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
-    // 메뉴 삭제
+    @ApiOperation(value = "메뉴 삭제", notes = "메뉴 삭제")
     @DeleteMapping(value = "/delete/{menu-id}")
     public ResponseEntity<?> deleteMenu(@PathVariable(name = "menu-id") Long menu_id) {
         menuService.delete(menu_id);

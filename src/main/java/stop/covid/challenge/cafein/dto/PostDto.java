@@ -1,23 +1,15 @@
 package stop.covid.challenge.cafein.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import stop.covid.challenge.cafein.domain.model.Comment;
-import stop.covid.challenge.cafein.domain.model.HashTag;
-import stop.covid.challenge.cafein.domain.model.Image;
-import stop.covid.challenge.cafein.domain.model.Post;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
 public class PostDto {
 
     private String writing;
     private int likeNumber;
-    private List<HashTag> hashTags = new ArrayList<>();
-    private List<Comment> comments = new ArrayList<>();
-    private List<Image> images = new ArrayList<>();
 
 }

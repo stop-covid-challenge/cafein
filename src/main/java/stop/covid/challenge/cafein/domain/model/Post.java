@@ -26,7 +26,16 @@ public class Post extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Image> images = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+
+    public void addComment(Comment comment) { this.comments.add(comment); }
+    public void addPostImage(List<Image> imageList) { this.images = imageList; }
     public void setUser(User user) {
         this.user = user;
     }
+
 }

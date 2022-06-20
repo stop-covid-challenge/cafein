@@ -8,7 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import springfox.documentation.spring.web.json.Json;
+import org.springframework.transaction.annotation.Transactional;
 import stop.covid.challenge.cafein.domain.auth.AuthorizationKakao;
 import stop.covid.challenge.cafein.domain.model.User;
 import stop.covid.challenge.cafein.dto.UserDto;
@@ -17,6 +17,7 @@ import stop.covid.challenge.cafein.service.auth.Oauth2Kakao;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
@@ -27,6 +28,32 @@ public class UserService {
         return user;
     }
 
+    @Transactional
+    public User loginRegister(UserDto userDto) {
+        User user = new User();
+        if (!userDto.getNickname().isEmpty()) {
+            user.setNickname(userDto.getNickname());
+        }
+        if (!userDto.getSocialId().isEmpty()) user.setSocialId(userDto.getSocialId());
+        if (!userDto.getProfileImage().isEmpty()) {
+            user.setProfileImage(userDto.getProfileImage());
+        }
+        if (!userDto.getEmail().isEmpty()) user.setEmail(userDto.getEmail());
+
+        if (!userDto.getIntroduce().isEmpty()) user.setIntroduce(userDto.getIntroduce());
+        if (!userDto.getAddress().isEmpty()) user.setAddress(userDto.getAddress());
+        if (!userDto.getBackgroundImage().isEmpty()) user.setBackgroundImage(userDto.getBackgroundImage());
+
+        User findUser = userRepository.findUserBySocialId(user.getSocialId());
+        User a = null;
+        if (findUser != a) {
+            return findUser;
+        } else {
+            return userRepository.save(user);
+        }
+    }
+
+    // 웹에서 카카오 로그인을 구현할 경우
     public ResponseEntity<User> oauth2AuthorizationKakao(String code) {
         AuthorizationKakao authorization = oauth2Kakao.callTokenApi(code);
         System.out.println(authorization.getAccess_token());
@@ -63,30 +90,6 @@ public class UserService {
         } else {
             userRepository.save(user);
             return new ResponseEntity<User>(findUser, headers, HttpStatus.OK);
-        }
-    }
-
-    public User loginRegister(UserDto userDto) {
-        User user = new User();
-        if (!userDto.getNickname().isEmpty()) {
-            user.setNickname(userDto.getNickname());
-        }
-        if (!userDto.getSocialId().isEmpty()) user.setSocialId(userDto.getSocialId());
-        if (!userDto.getProfileImage().isEmpty()) {
-            user.setProfileImage(userDto.getProfileImage());
-        }
-        if (!userDto.getEmail().isEmpty()) user.setEmail(userDto.getEmail());
-
-        if (!userDto.getIntroduce().isEmpty()) user.setIntroduce(userDto.getIntroduce());
-        if (!userDto.getAddress().isEmpty()) user.setAddress(userDto.getAddress());
-        if (!userDto.getBackgroundImage().isEmpty()) user.setBackgroundImage(userDto.getBackgroundImage());
-
-        User findUser = userRepository.findUserBySocialId(user.getSocialId());
-        User a = null;
-        if (findUser != a) {
-            return findUser;
-        } else {
-            return userRepository.save(user);
         }
     }
 

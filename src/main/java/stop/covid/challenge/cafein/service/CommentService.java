@@ -45,7 +45,9 @@ public class CommentService {
         comment.setUser(user);
         comment.setPost(post);
         comment.setWriting(comment.getWriting());
-        return comment;
+        post.addComment(comment);
+        postRepository.save(post);
+        return commentRepository.save(comment);
     }
 
     // 댓글 삭제하기
@@ -54,6 +56,8 @@ public class CommentService {
         User user = userRepository.findById(my_id).orElseThrow();
         Post post = postRepository.findById(post_id).orElseThrow();
         Comment comment = commentRepository.findCommentByUserAndPost(user, post);
+        post.getComments().remove(comment);
+        postRepository.save(post);
         commentRepository.delete(comment);
     }
 
