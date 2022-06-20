@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Menu {
+public class Menu extends BaseTimeEntity {
 
     @Id @Column(name = "menu_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

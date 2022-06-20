@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Image {
+public class Image extends BaseTimeEntity {
     @Id @Column(name = "image_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

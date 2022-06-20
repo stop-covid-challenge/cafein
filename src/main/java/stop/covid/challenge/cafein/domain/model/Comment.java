@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Comment {
+public class Comment extends BaseTimeEntity {
 
     @Id @Column(name = "comment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

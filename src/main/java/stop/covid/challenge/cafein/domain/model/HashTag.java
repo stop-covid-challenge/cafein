@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class HashTag {
+public class HashTag extends BaseTimeEntity {
     @Id @Column(name = "hashtag_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
