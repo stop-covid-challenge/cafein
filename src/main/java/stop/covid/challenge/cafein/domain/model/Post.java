@@ -23,10 +23,10 @@ public class Post {
     private int likeNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "personal_cafe_id")
-    private PersonalCafe personalCafe;
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    public void setPersonalCafe(PersonalCafe personalCafe) {
-        this.personalCafe = personalCafe;
+    public void setUser(User user) {
+        this.user = user;
     }
 }

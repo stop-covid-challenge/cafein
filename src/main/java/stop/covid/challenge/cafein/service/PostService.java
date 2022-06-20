@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import stop.covid.challenge.cafein.domain.model.*;
-import stop.covid.challenge.cafein.dto.MenuDto;
 import stop.covid.challenge.cafein.dto.PostDto;
 import stop.covid.challenge.cafein.repository.*;
 
@@ -17,7 +16,7 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class PostService {
 
-    private final PersonalCafeRepository personalCafeRepository;
+    private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final FollowingRepository followingRepository;
     private final ImageRepository imageRepository;
@@ -28,14 +27,14 @@ public class PostService {
     @Transactional
     public Boolean save(Long id, PostDto postDto) {
         // 먼저 id로 계정 조회 후 가져옴
-        Optional<PersonalCafe> optionalPersonalCafe = personalCafeRepository.findById(id);
+        Optional<User> optionalUser = userRepository.findById(id);
 
-        if (optionalPersonalCafe.isEmpty()) {
+        if (optionalUser.isEmpty()) {
             return false;
         }
 
-        PersonalCafe personalCafe = optionalPersonalCafe.get();
-        Post post = postRepository.save(Post.builder().writing(postDto.getWriting()).likeNumber(postDto.getLikeNumber()).personalCafe(personalCafe).build());
+        User user = optionalUser.get();
+        Post post = postRepository.save(Post.builder().writing(postDto.getWriting()).likeNumber(postDto.getLikeNumber()).user(user).build());
         checkImageAndHashTagAndComment(postDto, post);
         return true;
     }
@@ -66,8 +65,8 @@ public class PostService {
     // 내가 팔로잉하고 있는 카페의 최신게시글 표시
     public List<Post> getFollowingPosts(Long my_id) {
         List<Long> followingIds = new ArrayList<>();
-        PersonalCafe personalCafe = personalCafeRepository.findById(my_id).get();
-        List<Following> followings = followingRepository.findAllByPersonalCafe(personalCafe);
+        User user = userRepository.findById(my_id).get();
+        List<Following> followings = followingRepository.findAllByUser(user);
         followings.forEach(following -> {
             followingIds.add(following.getFollower_id());
         });

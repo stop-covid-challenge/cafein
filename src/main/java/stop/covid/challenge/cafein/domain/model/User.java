@@ -20,7 +20,10 @@ public class User {
     private String email;
     private String socialId;
     private String nickname;
+    private String introduce;
     private String profileImage;
+    private String backgroundImage;
+    private String address;
     private String phoneNumber;
 
     //회원 등록

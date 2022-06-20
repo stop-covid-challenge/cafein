@@ -19,8 +19,8 @@ public class Menu {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "personal_cafe_id")
-    private PersonalCafe personalCafe;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     private String title;
     private String writing;
@@ -28,9 +28,6 @@ public class Menu {
     @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
     private List<Image> images = new ArrayList<>();
 
-    public void addPersonalCafe(PersonalCafe personalCafe) {
-        this.personalCafe = personalCafe;
-    }
     public void addMenuImage(List<Image> imageList) { this.images = imageList; }
 
 }

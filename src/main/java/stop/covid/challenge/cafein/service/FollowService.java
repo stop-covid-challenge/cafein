@@ -5,11 +5,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import stop.covid.challenge.cafein.domain.model.Follower;
 import stop.covid.challenge.cafein.domain.model.Following;
-import stop.covid.challenge.cafein.domain.model.PersonalCafe;
+import stop.covid.challenge.cafein.domain.model.User;
 import stop.covid.challenge.cafein.dto.FollowListDto;
 import stop.covid.challenge.cafein.repository.FollowerRepository;
 import stop.covid.challenge.cafein.repository.FollowingRepository;
-import stop.covid.challenge.cafein.repository.PersonalCafeRepository;
+import stop.covid.challenge.cafein.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,23 +19,23 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class FollowService {
 
-    private final PersonalCafeRepository personalCafeRepository;
+    private final UserRepository userRepository;
     private final FollowerRepository followerRepository;
     private final FollowingRepository followingRepository;
 
     // 사용자의 Follower 가져오기
     public List<FollowListDto> getFollower(Long id) {
         // 사용자의 Follower를 가져오기
-        PersonalCafe host = personalCafeRepository.findById(id).get();
-        List<Follower> followers = followerRepository.findAllByPersonalCafe(host);
+        User host = userRepository.findById(id).get();
+        List<Follower> followers = followerRepository.findAllByUser(host);
         List<FollowListDto> followDtos = new ArrayList<>();
 
         // 각 Follow를 조회하여 프로필 이미지와 닉네임 가져오기
         followers.forEach(follower -> {
             FollowListDto followDto = new FollowListDto();
-            PersonalCafe personalCafe = personalCafeRepository.findById(follower.getFollowing_id()).get();
-            followDto.setProfile_image(personalCafe.getProfileImage());
-            followDto.setNickname(personalCafe.getNickname());
+            User user = userRepository.findById(follower.getFollowing_id()).get();
+            followDto.setProfile_image(user.getProfileImage());
+            followDto.setNickname(user.getNickname());
             followDtos.add(followDto);
         });
         return followDtos;
@@ -44,16 +44,16 @@ public class FollowService {
     // 사용자의 Following 가져오기
     public List<FollowListDto> getFollowing(Long id) {
         // 사용자의 Following 가져오기
-        PersonalCafe host = personalCafeRepository.findById(id).get();
-        List<Following> followings = followingRepository.findAllByPersonalCafe(host);
+        User host = userRepository.findById(id).get();
+        List<Following> followings = followingRepository.findAllByUser(host);
         List<FollowListDto> followDtos = new ArrayList<>();
 
         // 각 Follow를 조회하여 프로필 이미지와 닉네임 가져오기
         followings.forEach(following -> {
             FollowListDto followDto = new FollowListDto();
-            PersonalCafe personalCafe = personalCafeRepository.findById(following.getFollower_id()).get();
-            followDto.setProfile_image(personalCafe.getProfileImage());
-            followDto.setNickname(personalCafe.getNickname());
+            User user = userRepository.findById(following.getFollower_id()).get();
+            followDto.setProfile_image(user.getProfileImage());
+            followDto.setNickname(user.getNickname());
             followDtos.add(followDto);
         });
         return followDtos;
@@ -62,13 +62,13 @@ public class FollowService {
     @Transactional
     public Boolean setFollow(Long my_id, Long other_id) {
         // 내 객체
-        PersonalCafe personalCafe = personalCafeRepository.findById(my_id).get();
+        User host = userRepository.findById(my_id).get();
 
         // 상대방 객체
-        PersonalCafe otherPersonalCafe = personalCafeRepository.findById(other_id).get();
+        User otherUser = userRepository.findById(other_id).get();
 
         // 내 팔로잉 목록
-        List<Following> followings = followingRepository.findAllByPersonalCafe(personalCafe);
+        List<Following> followings = followingRepository.findAllByUser(host);
         boolean isExist = false;
 
         // 내 Following
@@ -91,9 +91,9 @@ public class FollowService {
             followingRepository.delete(myFollowing);
 
             // 상대방 팔로워 목록에서도 삭제하기
-            List<Follower> followers = followerRepository.findAllByPersonalCafe(otherPersonalCafe);
+            List<Follower> followers = followerRepository.findAllByUser(otherUser);
             for (Follower compare : followers) {
-                if (compare.getFollowing_id() == personalCafe.getId()) {
+                if (compare.getFollowing_id() == host.getId()) {
                     otherFollower = compare;
                     break;
                 }
@@ -102,12 +102,12 @@ public class FollowService {
             return false;
         } else {
             // 내가 팔로우 안하고 있다면 추가하기
-            myFollowing.setPersonalCafe(personalCafe);
+            myFollowing.setUser(host);
             myFollowing.setFollower_id(other_id);
             followingRepository.save(myFollowing);
 
             // 상대방 팔로워에다가도 추가하기
-            otherFollower.setPersonalCafe(otherPersonalCafe);
+            otherFollower.setUser(otherUser);
             otherFollower.setFollowing_id(my_id);
             followerRepository.save(otherFollower);
             return true;

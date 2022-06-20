@@ -3,17 +3,14 @@ package stop.covid.challenge.cafein.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import stop.covid.challenge.cafein.domain.model.Menu;
-import stop.covid.challenge.cafein.domain.model.PersonalCafe;
+import stop.covid.challenge.cafein.domain.model.User;
 import stop.covid.challenge.cafein.dto.MenuDto;
-import stop.covid.challenge.cafein.repository.MenuRepository;
-import stop.covid.challenge.cafein.repository.PersonalCafeRepository;
+import stop.covid.challenge.cafein.repository.UserRepository;
 import stop.covid.challenge.cafein.service.MenuService;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,14 +20,14 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MenuController {
 
-    private final PersonalCafeRepository personalCafeRepository;
+    private final UserRepository userRepository;
     private final MenuService menuService;
 
     // 메뉴 전체 조회
     @GetMapping(value = "/get")
     public ResponseEntity<Map<String, Object>> getAllMenu(@RequestParam String nickname) {
-        PersonalCafe personalCafe = personalCafeRepository.findPersonalCafeByNickname(nickname);
-        List<Menu> menus = menuService.getAllMenu(personalCafe);
+        User user = userRepository.findUserByNickname(nickname);
+        List<Menu> menus = menuService.getAllMenu(user);
         Map<String, Object> result = new HashMap<>();
         result.put("data", menus);
         return ResponseEntity.ok(result);

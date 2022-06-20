@@ -8,7 +8,6 @@ import stop.covid.challenge.cafein.domain.model.*;
 import stop.covid.challenge.cafein.dto.MenuDto;
 import stop.covid.challenge.cafein.repository.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,9 +16,9 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class MenuService {
 
+    private final UserRepository userRepository;
     private final MenuRepository menuRepository;
     private final ImageRepository imageRepository;
-    private final PersonalCafeRepository personalCafeRepository;
     private final ImageService imageService;
 
     @Transactional
@@ -28,15 +27,15 @@ public class MenuService {
     }
 
     @Transactional
-    public List<Menu> getAllMenu(PersonalCafe personalCafe) {
-        return menuRepository.findAllByPersonalCafe(personalCafe);
+    public List<Menu> getAllMenu(User user) {
+        return menuRepository.findAllByUser(user);
     }
 
     @Transactional
     public Long save(String nickname, List<MultipartFile> files, MenuDto menuDto) {
-        PersonalCafe personalCafe = personalCafeRepository.findPersonalCafeByNickname(nickname);
+        User user = userRepository.findUserByNickname(nickname);
         Menu menu = menuRepository.save(
-            Menu.builder().personalCafe(personalCafe)
+            Menu.builder().user(user)
             .title(menuDto.getTitle())
             .writing(menuDto.getWriting())
             .build());

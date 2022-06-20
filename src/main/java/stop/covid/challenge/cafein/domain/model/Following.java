@@ -17,14 +17,14 @@ public class Following {
 
     // 내 아이디
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
-    private PersonalCafe personalCafe;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     // 내가 팔로잉하는 사람의 아이디
     @Column(name = "follower_id")
     private Long follower_id;
 
-    public void addFollowing(PersonalCafe personalCafe) {
-        this.personalCafe = personalCafe;
+    public void addFollowing(User user) {
+        this.user = user;
     }
 }
