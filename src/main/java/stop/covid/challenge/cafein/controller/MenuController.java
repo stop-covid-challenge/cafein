@@ -51,7 +51,7 @@ public class MenuController {
     ) {
         MenuDto menuDto = new MenuDto(title, writing);
         Menu menu = menuService.save(nickname, images, menuDto);
-        return new ResponseEntity<Long>(menu, HttpStatus.OK) ;
+        return new ResponseEntity<Menu>(menu, HttpStatus.OK) ;
     }
 
     @ApiOperation(value = "메뉴 수정", notes = "메뉴 수정")
