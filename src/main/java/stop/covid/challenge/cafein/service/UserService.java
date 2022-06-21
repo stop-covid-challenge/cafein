@@ -34,9 +34,9 @@ public class UserService {
     }
 
     // 로그인 하기
-    public ResponseEntity loginUser(UserDto userDto) {
+    public ResponseEntity loginUser(String socialId) {
         try {
-            User user = userRepository.findUserBySocialId(userDto.getSocialId());
+            User user = userRepository.findUserBySocialId(socialId);
             return ResponseEntity.ok(user);
         } catch (Exception e) {
             e.printStackTrace();
@@ -65,9 +65,11 @@ public class UserService {
     public User updateProfileImage(String nickname, MultipartFile multipartFile) {
         // 사용자 조회 후 기존 사진 삭제
         User user = userRepository.findUserByNickname(nickname);
-        Image deleteFile = imageRepository.findByImageLink(user.getProfileImage());
-        imageService.deleteFile(deleteFile);
-        imageRepository.delete(deleteFile);
+        if (user.getProfileImage() != null) {
+            Image deleteFile = imageRepository.findByImageLink(user.getProfileImage());
+            imageService.deleteFile(deleteFile);
+            imageRepository.delete(deleteFile);
+        }
 
         // 새로운 이미지 저장 후 업데이트
         Image profile = imageService.uploadOneFile(multipartFile);
@@ -82,9 +84,11 @@ public class UserService {
     public User updateBackgroundImage(String nickname, MultipartFile multipartFile) {
         // 사용자 조회 후 기존 사진 삭제
         User user = userRepository.findUserByNickname(nickname);
-        Image deleteFile = imageRepository.findByImageLink(user.getBackgroundImage());
-        imageService.deleteFile(deleteFile);
-        imageRepository.delete(deleteFile);
+        if (user.getBackgroundImage() != null) {
+            Image deleteFile = imageRepository.findByImageLink(user.getBackgroundImage());
+            imageService.deleteFile(deleteFile);
+            imageRepository.delete(deleteFile);
+        }
 
         // 새로운 이미지 저장 후 업데이트
         Image background = imageService.uploadOneFile(multipartFile);

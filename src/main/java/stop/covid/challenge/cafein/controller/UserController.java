@@ -25,9 +25,9 @@ public class UserController {
     @ApiOperation(value = "로그인", notes = "로그인")
     @GetMapping("/login")
     public ResponseEntity login(
-        @RequestBody UserDto userDto
+        @RequestParam String socialId
     ) {
-        return userService.loginUser(userDto);
+        return userService.loginUser(socialId);
     }
 
     @ApiOperation(value = "회원가입", notes = "회원가입")

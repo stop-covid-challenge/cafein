@@ -1,13 +1,16 @@
 package stop.covid.challenge.cafein.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import stop.covid.challenge.cafein.domain.model.*;
 import stop.covid.challenge.cafein.dto.MenuDto;
+import stop.covid.challenge.cafein.dto.MenuImageDto;
 import stop.covid.challenge.cafein.repository.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,16 +24,40 @@ public class MenuService {
     private final ImageRepository imageRepository;
     private final ImageService imageService;
 
-    public Menu getMenu(Long id) {
-        return menuRepository.findById(id).get();
+    public ResponseEntity getMenu(Long id) {
+        Menu menu = menuRepository.findById(id).orElseThrow();
+        if (menu != null) {
+            List<String> image = new ArrayList<>();
+            List<Image> images = imageRepository.findAllByMenu(menu);
+            if (images.toArray().length > 0) {
+                images.forEach(element -> {
+                    image.add(element.getImageLink());
+                });
+            }
+            MenuImageDto menuImageDto = new MenuImageDto(menu.getTitle(), menu.getWriting(), image);
+            return ResponseEntity.ok(menuImageDto);
+        }
+        return ResponseEntity.notFound().build();
     }
 
-    public List<Menu> getAllMenu(User user) {
-        return menuRepository.findAllByUser(user);
+    public List<MenuImageDto> getAllMenu(User user) {
+        List<Menu> menus = menuRepository.findAllByUser(user);
+        List<MenuImageDto> menuImageDtos = new ArrayList<>();
+        menus.forEach(menu -> {
+            List<String> image = new ArrayList<>();
+            List<Image> images = imageRepository.findAllByMenu(menu);
+            if (images.toArray().length > 0) {
+                images.forEach(element -> {
+                    image.add(element.getImageLink());
+                });
+            }
+            menuImageDtos.add(new MenuImageDto(menu.getTitle(), menu.getWriting(), image));
+        });
+        return menuImageDtos;
     }
 
     @Transactional
-    public Long save(String nickname, List<MultipartFile> files, MenuDto menuDto) {
+    public Menu save(String nickname, List<MultipartFile> files, MenuDto menuDto) {
         User user = userRepository.findUserByNickname(nickname);
         Menu menu = menuRepository.save(
             Menu.builder().user(user)
@@ -38,8 +65,10 @@ public class MenuService {
             .writing(menuDto.getWriting())
             .build());
 
-        checkImageAndHashTag(files, menuDto, menu);
-        return menu.getId();
+        if (!files.isEmpty()) {
+            checkImageAndHashTag(files, menuDto, menu);
+        }
+        return menu;
     }
 
     @Transactional
@@ -53,7 +82,9 @@ public class MenuService {
         if (menuDto.getTitle().length() > 0) menu.setTitle(menuDto.getTitle());
         if (menuDto.getWriting().length() > 0) menu.setWriting(menu.getWriting());
         Menu savedMenu = menuRepository.save(menu);
-        checkImageAndHashTag(files, menuDto, savedMenu);
+        if (!files.isEmpty()) {
+            checkImageAndHashTag(files, menuDto, savedMenu);
+        }
         return true;
     }
 
