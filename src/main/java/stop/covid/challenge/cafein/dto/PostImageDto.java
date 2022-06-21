@@ -12,11 +12,11 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuImageDto {
+public class PostImageDto {
 
     private Long id;
-    private String title;
     private String writing;
+    private int likeNumber;
     private List<String> image = new ArrayList<>();
 
 }

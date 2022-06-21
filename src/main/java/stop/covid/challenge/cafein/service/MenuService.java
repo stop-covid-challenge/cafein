@@ -34,7 +34,7 @@ public class MenuService {
                     image.add(element.getImageLink());
                 });
             }
-            MenuImageDto menuImageDto = new MenuImageDto(menu.getTitle(), menu.getWriting(), image);
+            MenuImageDto menuImageDto = new MenuImageDto(menu.getId(), menu.getTitle(), menu.getWriting(), image);
             return ResponseEntity.ok(menuImageDto);
         }
         return ResponseEntity.notFound().build();
@@ -51,7 +51,7 @@ public class MenuService {
                     image.add(element.getImageLink());
                 });
             }
-            menuImageDtos.add(new MenuImageDto(menu.getTitle(), menu.getWriting(), image));
+            menuImageDtos.add(new MenuImageDto(menu.getId(), menu.getTitle(), menu.getWriting(), image));
         });
         return menuImageDtos;
     }
