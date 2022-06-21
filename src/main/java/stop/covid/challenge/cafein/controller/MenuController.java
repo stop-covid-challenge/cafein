@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import stop.covid.challenge.cafein.domain.model.Menu;
 import stop.covid.challenge.cafein.domain.model.User;
 import stop.covid.challenge.cafein.dto.MenuDto;
+import stop.covid.challenge.cafein.dto.MenuImageDto;
 import stop.covid.challenge.cafein.repository.UserRepository;
 import stop.covid.challenge.cafein.service.MenuService;
 
@@ -26,33 +27,31 @@ public class MenuController {
 
     @ApiOperation(value = "메뉴 전체 조회", notes = "메뉴 전체 조회")
     @GetMapping(value = "/get")
-    public ResponseEntity<Map<String, Object>> getAllMenu(@RequestParam String nickname) {
+    public ResponseEntity<List<MenuImageDto>> getAllMenu(@RequestParam String nickname) {
         User user = userRepository.findUserByNickname(nickname);
-        List<Menu> menus = menuService.getAllMenu(user);
-        Map<String, Object> result = new HashMap<>();
-        result.put("data", menus);
-        return ResponseEntity.ok(result);
+        List<MenuImageDto> menus = menuService.getAllMenu(user);
+//        Map<String, Object> result = new HashMap<>();
+//        result.put("data", menus);
+        return ResponseEntity.ok(menus);
     }
 
     @ApiOperation(value = "메뉴 하나 조회", notes = "메뉴 하나 조회")
-    @GetMapping(value = "/get/{menu-id}")
-    public ResponseEntity<Map<String, Object>> getOneMenu(@PathVariable Long id) {
-        Menu menu = menuService.getMenu(id);
-        Map<String, Object> result = new HashMap<>();
-        result.put("menu", menu);
-        return ResponseEntity.ok(result);
+    @GetMapping(value = "/get/{id}")
+    public ResponseEntity getOneMenu(@PathVariable("id") Long id) {
+        return menuService.getMenu(id);
     }
 
     @ApiOperation(value = "메뉴 등록", notes = "메뉴 등록")
     @PostMapping(value = "/post", consumes = { "multipart/form-data" })
-    public ResponseEntity<Long> postMenu(
+    public ResponseEntity<Menu> postMenu(
         @RequestPart("images") List<MultipartFile> images,
         @RequestParam("title") String title,
         @RequestParam("writing") String writing,
         @RequestParam("nickname") String nickname
     ) {
         MenuDto menuDto = new MenuDto(title, writing);
-        return new ResponseEntity<Long>(menuService.save(nickname, images, menuDto), HttpStatus.OK) ;
+        Menu menu = menuService.save(nickname, images, menuDto);
+        return new ResponseEntity<Menu>(menu, HttpStatus.OK) ;
     }
 
     @ApiOperation(value = "메뉴 수정", notes = "메뉴 수정")

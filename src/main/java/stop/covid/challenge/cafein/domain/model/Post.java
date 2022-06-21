@@ -1,5 +1,7 @@
 package stop.covid.challenge.cafein.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,14 +24,17 @@ public class Post extends BaseTimeEntity {
     private String writing;
     private int likeNumber;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<Image> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<Comment> comments = new ArrayList<>();
 
     public void addComment(Comment comment) { this.comments.add(comment); }

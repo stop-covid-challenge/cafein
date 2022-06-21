@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import stop.covid.challenge.cafein.domain.model.*;
 import stop.covid.challenge.cafein.dto.PostDto;
+import stop.covid.challenge.cafein.dto.PostImageDto;
 import stop.covid.challenge.cafein.repository.*;
 
 import java.util.ArrayList;
@@ -23,20 +24,47 @@ public class PostService {
     private final ImageRepository imageRepository;
     private final ImageService imageService;
 
-    public List<Post> getAllPosts() {
-        return postRepository.findAll();
+    public List<PostImageDto> getAllPosts() {
+        List<Post> posts = postRepository.findAll();
+        List<PostImageDto> postImageDtos = new ArrayList<>();
+        posts.forEach(post -> {
+            List<String> image = new ArrayList<>();
+            List<Image> images = imageRepository.findAllByPost(post);
+            if (images.toArray().length > 0){
+                images.forEach(image1 -> {
+                    image.add(image1.getImageLink());
+                });
+            }
+            postImageDtos.add(new PostImageDto(post.getId(), post.getWriting(), post.getLikeNumber(), image));
+        });
+        return postImageDtos;
     }
 
     // 내가 팔로잉하고 있는 카페의 최신게시글 표시
-    public List<Post> getFollowingPosts(Long my_id) {
-        List<Long> followingIds = new ArrayList<>();
+    public List<PostImageDto> getFollowingPosts(Long my_id) {
+        List<User> followingIds = new ArrayList<>();
         User user = userRepository.findById(my_id).get();
         List<Following> followings = followingRepository.findAllByUser(user);
         followings.forEach(following -> {
-            followingIds.add(following.getFollower_id());
+            followingIds.add(userRepository.findById(following.getFollower_id()).orElseThrow());
         });
 
-        return postRepository.findAllById(followingIds);
+        List<Post> posts = new ArrayList<>();
+        followingIds.forEach(id -> {
+            posts.addAll(postRepository.findAllByUser(id));
+        });
+        List<PostImageDto> postImageDtos = new ArrayList<>();
+        posts.forEach(post -> {
+            List<String> image = new ArrayList<>();
+            List<Image> images = imageRepository.findAllByPost(post);
+            if (images.toArray().length > 0){
+                images.forEach(image1 -> {
+                    image.add(image1.getImageLink());
+                });
+            }
+            postImageDtos.add(new PostImageDto(post.getId(), post.getWriting(), post.getLikeNumber(), image));
+        });
+        return postImageDtos;
     }
 
     // 포스트 등록
@@ -66,8 +94,9 @@ public class PostService {
         Post post = oPost.get();
         if (postDto.getLikeNumber() >= 0) post.setLikeNumber(postDto.getLikeNumber());
         if (postDto.getWriting().length() > 0) post.setWriting(postDto.getWriting());
-        checkImageAndHashTagAndComment(files, postDto, post);
-
+        if (!files.isEmpty()) {
+            checkImageAndHashTagAndComment(files, postDto, post);
+        }
         postRepository.save(post);
         return true;
     }
